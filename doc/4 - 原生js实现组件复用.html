@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <div id="parent"></div>
+
+  <script>
+    // 事件委托
+    window.trigger = function (event, method) {
+      const instance = event.target.component
+      instance[method].call(instance)
+    }
+
+    class Component {
+      constructor (props) {
+        this.props = props
+      }
+
+      // dom字符串生成dom元素
+      renderElement () {
+        const htmlStr = this.render()
+        const div = document.createElement('div')
+        div.innerHTML = htmlStr
+        const dom = this.renderDom = div.children[0]
+        dom.component = this
+        return dom
+      }
+
+      // 修改状态值并重新渲染页面
+      setState (state) {
+        Object.assign(this.state, state)
+        const oldElement = this.renderDom
+        const newElement = this.renderElement()
+        const parentNode = oldElement.parentNode
+        parentNode.replaceChild(newElement, oldElement)
+      }
+
+      mount (parentNode) {
+        parentNode.appendChild(this.renderElement())
+      }
+    }
+
+    class Counter extends Component {
+      constructor (props) {
+        super(props)
+        this.state = {num: 0}
+      }
+
+      add () {
+        this.setState({num: this.state.num + 1})
+      }
+
+      render () {
+        return `<button onclick="trigger(event, 'add')">${this.state.num}</button>`
+      }
+    }
+
+    const parent = document.getElementById('parent')
+    new Counter().mount(parent)
+
+    /**
+     * 总结：
+     * 纯 js 实现复用组件流程：
+     * 1、通过 dom 字符串复用 dom；通过 window 事件代理处理 dom 事件
+     * 2、修改状态通过 replaceChild 重新渲染元素
+     */
+  </script>
+</body>
+</html>
