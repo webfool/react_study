@@ -8,46 +8,35 @@ import ReactDom from 'react-dom'
 class Counter extends React.Component {
   constructor (props) {
     super(props)
-
-    // 设置默认 state
-    this.span = React.createRef()
-    this.child = React.createRef()
-    this.child2 = React.createRef()
+    this.state = {num: 1}
   }
 
-  getRef = () => {
-    console.log('span ->', this.span)
-    console.log('child ->', this.child)
-    console.log('child2 ->', this.child2)
+  change = () => {
+    this.setState({num: this.state.num + 1})
+    console.log('num ->', this.state.num)
+
+    this.setState({num: this.state.num + 1})
+    console.log('num ->', this.state.num)
+
+    setTimeout(() => {
+      console.log('num ->', this.state.num)
+
+      this.setState({num: this.state.num + 1})
+      console.log('num ->', this.state.num)
+
+      this.setState({num: this.state.num + 1})
+      console.log('num ->', this.state.num)
+    })
   }
 
   render () {
     return <>
-      <span ref={this.span}>{1}</span>
-      <Child ref={this.child}></Child>
-      <Child2 ref={this.child2}></Child2>
-      <button onClick={this.getRef}>获取Ref</button>
+      <span onClick={this.change}>点击</span>
     </>
   }
 }
 
-class Child extends React.Component {
-  constructor (props) {
-    super(props)
-    this.state = {name: 'child'}
-  }
-  render () {
-    return <h1>child</h1>
-  }
-}
-
-// 通过 forwardRef 转发 ref
-const Child2 = React.forwardRef((props, ref) => {
-  return <h1 ref={ref}>child2</h1>
-})
-
 ReactDom.render(<Counter></Counter>, document.getElementById('root'))
-
 /**
  * 总结:
  * 

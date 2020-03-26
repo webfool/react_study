@@ -10,15 +10,48 @@
   <div id="parent"></div>
 
   <script>
+    class Transaction {
+      constructor (wrapper) {
+        this.wrapper = wrapper
+      }
+
+      perform (fn) {
+        this.wrapper.initialize()
+        fn()
+        this.wrapper.close()
+      }
+    }
+
+    const batchingStrategy = {
+      isBatchingUpdates: false,
+      updaters: [],
+      batchedUpdates () {
+        this.updaters.forEach(component => {
+          component.updateComponent()
+        })
+      }
+    }
+
+
+    const transaction = new Transaction({
+      initialize () {
+        batchingStrategy.isBatchingUpdates = true
+      },
+      close () {
+        batchingStrategy.isBatchingUpdates = false
+        batchingStrategy.batchedUpdates()
+      }
+    })
     // 事件委托
     window.trigger = function (event, method) {
       const instance = event.target.component
-      instance[method].call(instance)
+      transaction.perform(instance[method].bind(instance))
     }
 
     class Component {
       constructor (props) {
         this.props = props
+        this.pendingStates = []
       }
 
       // dom字符串生成dom元素
@@ -33,7 +66,15 @@
 
       // 修改状态值并重新渲染页面
       setState (state) {
-        Object.assign(this.state, state)
+        this.pendingStates.push(state)
+        batchingStrategy.isBatchingUpdates
+          ? batchingStrategy.updaters.push(this)
+          : this.updateComponent()
+      }
+
+      updateComponent () {
+        this.pendingStates.forEach(state => Object.assign(this.state, state))
+        this.pendingStates.length = 0
         const oldElement = this.renderDom
         const newElement = this.renderElement()
         const parentNode = oldElement.parentNode
@@ -52,7 +93,18 @@
       }
 
       add () {
-        this.setState({num: this.state.num + 1})
+        this.setState({num: 2})
+        console.log('num ->', this.state.num)
+        this.setState({num: 3})
+        console.log('num ->', this.state.num)
+
+        setTimeout(() => {
+          this.setState({num: 4})
+          console.log('num ->', this.state.num)
+
+          this.setState({num: 5})
+          console.log('num ->', this.state.num)
+        })
       }
 
       render () {
@@ -68,6 +120,8 @@
      * 纯 js 实现复用组件流程：
      * 1、通过 dom 字符串复用 dom；通过 window 事件代理处理 dom 事件
      * 2、修改状态通过 replaceChild 重新渲染元素
+     * 3、dom事件调用时的 setState 会进行批量更新，再重新渲染；非 dom 事件调用的 setState 会立即更新并重新渲染
+     * 4、利用事务的概念包裹事件
      */
   </script>
 </body>
