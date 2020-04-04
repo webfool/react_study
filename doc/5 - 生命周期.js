@@ -146,7 +146,7 @@ ReactDom.render(<Counter></Counter>, document.getElementById('root'))
  * 2、传参：render 之后 this.props/this.state 都是最新的，所以传参进来的都是旧数据
  * - 旧版生命周期中，componentWillUpdate 在 render 之前触发，所以只有 componentDidUpdate 传入的参数是旧数据，其它都是新数据
  * - 新版生命周期中，getSnapshotBeforeUpdate 在 render 之后触发，所以 getSnapshotBeforeUpdate 和 componentDidUpdate 传入的参数是旧数据，其它是新数据
- * 
+ * ,
  * 3、props 控制 state 的一些方案：
  * - 完全受控组件
  * - 带key重新渲染

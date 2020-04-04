@@ -56,6 +56,7 @@ class Parent extends React.Component {
 
 // propTypes 校验
 class Child extends React.Component {
+  // 设置默认值，当未传入值或者传入 undefined 时，使用默认值
   static defaultProps = {
     isLife: true
   }
