@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDom from 'react-dom'
+import './myStyle.css'
 
 // 目标：1、Portals 的使用 2、手写模态框
 
