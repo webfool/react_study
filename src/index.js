@@ -36,6 +36,7 @@ class Counter extends Component {
 ReactDOM.render(<Counter></Counter>, document.getElementById('root'))
 
 /**
+ * === 核心概念 ===
  * 整个应用应该只有一个 store，且 state 是单向数据流
  * 
  * 【dispatch】：派发 action 修改 state
@@ -51,4 +52,8 @@ ReactDOM.render(<Counter></Counter>, document.getElementById('root'))
  * - dispatch 完成后会直接调用所有 listeners，调用之前会生成事件快照，每个 listener 中添加或删除 listener 不会影响本次 dispatch 的回调列表
  * 
  * 【getState】获取最新的 state
+ * 
+ * === 工具方法 ===
+ * 【bindActionCreators】：为 action creator 或由其组成的对象绑定 dispatch
+ * 【combineReducers】: 传入一个对象绑定每个属性的 reducer，生成一个新 reducer。新 reducer 接收 action，传递给每个属性的 reducer 生成新的属性值
  */
