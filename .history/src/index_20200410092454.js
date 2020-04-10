@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import {bindActionCreators} from 'redux'
 import store from './store'
 import counterActions from './store/actions/counter'
-// import VirtualList from '../doc/react优化/VirtualList'
+import VirtualList from './VirtualList'
 
 const bindCounterActions = bindActionCreators(counterActions, store.dispatch)
 
@@ -35,26 +35,20 @@ class Counter extends Component {
 }
 
 
-ReactDOM.render(<Counter></Counter>, document.getElementById('root'))
-// function getRandomColor () {
-//   const rand = Math.floor((Math.random() * 0xFFFFFF)).toString(16).toUpperCase()
-//   if (rand.length === 6) return '#' + rand
-//   return getRandomColor()
-// }
+// ReactDOM.render(<Counter></Counter>, document.getElementById('root'))
+const Child = (props) => {
+  return <div>{props.index} : {props.name}</div>
+}
 
-// const Child = (props) => {
-//   return <div style={{background: getRandomColor()}}>{props.index} : {props.name}</div>
-// }
+const items = Array.from({length: 1000}).map((item, index) => {
+  return {name: 'hw' + index}
+})
 
-// const items = Array.from({length: 1000}).map((item, index) => {
-//   return {name: 'hw' + index}
-// })
+const props = {items, itemSize: 30, height: 100}
 
-// const props = {items, itemSize: 30, height: 100}
-
-// ReactDOM.render(<VirtualList {...props}>
-//   {(p) => <Child {...p}></Child>}
-// </VirtualList>, document.getElementById('root'))
+ReactDOM.render(<VirtualList {...props}>
+  <Child></Child>
+</VirtualList>, document.getElementById('root'))
 
 
 
