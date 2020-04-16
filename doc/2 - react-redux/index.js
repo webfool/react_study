@@ -1,13 +1,22 @@
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
+import store from './store'
+import Counter from './Counter'
 
 class App extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {title: '计数器标题'}
+  }
   render () {
-    return <span>app</span>
+    return <Counter title={this.state.title}></Counter>
   }
 }
 
-ReactDOM.render(<App/>, document.getElementById('root'))
+ReactDOM.render(<Provider store={store}>
+  <App/>
+</Provider>, document.getElementById('root'))
 
 /**
  * react-redux 的目的：将组件内获取 state、监听 store、action绑定 dispatch 抽象出来

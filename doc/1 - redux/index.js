@@ -55,6 +55,7 @@ ReactDOM.render(<Counter></Counter>, document.getElementById('root'))
  * 【getState】获取最新的 state
  * 
  * === 工具方法 ===
- * 【bindActionCreators】：为 action creator 或由其组成的对象绑定 dispatch
- * 【combineReducers】: 传入一个对象绑定每个属性的 reducer，生成一个新 reducer。新 reducer 接收 action，传递给每个属性的 reducer 生成新的属性值
+ * 【bindActionCreators】：为 action creator 或由其组成的对象装饰成绑定了 dispatch 的函数
+ * 【combineReducers】: 
+ *  生成一个主 reducer，派发 action 时，将 action 以及所有模块对应的 state 传入模块对应的 reducer 中，每个 reducer 的返回值重新组成 state 树
  */
