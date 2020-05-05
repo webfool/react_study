@@ -81,7 +81,7 @@ class Parent extends React.Component {
   }
 }
 class Child1 extends React.Component {
-  // static contextType = ThemeContext
+  // static contextType = ThemeContext // 原生react下，contextType 的值会赋值给实例化对象的 context 属性
   static myContext = ThemeContext
 
   render() {
@@ -116,7 +116,8 @@ ReactDom.render(<GrandParent></GrandParent>, document.getElementById('root'))
  * 
  * === 新版 context 的使用 ===
  * - 通过 React.createContext 生成 context，context 的 Provider 用来注入值，Provider 下的子组件或者 Consumer 用来消费值
- * - 类组件通过 static contextType 消费；Consumer 通过 renderProps 进行消费
+ * - 类组件通过 static contextType 消费；函数组件通过 Consumer 进行消费
+ * - 如果需要修改注入的值，需通过注入修改方法，调用其进行修改
  *
  * === 新版 createContext 的实现思路（返回的对象 {Provider, Consumer}）===
  * 【Provider】：
@@ -124,7 +125,9 @@ ReactDom.render(<GrandParent></GrandParent>, document.getElementById('root'))
  * - 为了使 Context 变化时，能够使子组件更新，需要使子组件被一个组件包裹，即 Provider 得是一个组件
  * 
  * 【Consumer】:
- * - Consumer 应该是个组件，且传递给组件的内容应该是个 renderProps
+ * - Consumer 是个组件，且传递给组件的内容应该是个 renderProps
+ * 
+ * 
  * 
  * === 旧版 context 的使用 ===
  */

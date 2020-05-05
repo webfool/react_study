@@ -139,7 +139,7 @@ ReactDom.render(<Counter></Counter>, document.getElementById('root'))
  * - 创建阶段：constructor【初始化state和方法】 -> componentWillMount【没啥用】 -> render -> componentDidMount【数据请求、订阅、操作dom】
  * - 更新阶段：componentWillReceiveProps【同步修改state】 -> shouldComponentUpdate【优化：确定组件是否更新】 -> componentWillUpdate【存储更新前的 dom 或者其它数据】 -> render -> componentDidUpdate 【数据请求、订阅、操作dom】
  * 
- * 旧版生命周期顺序
+ * 新版生命周期顺序
  * - 创建阶段：constructor【初始化state和方法】 -> getDerivedStateFromProps【派生 state】 -> render -> componentDidMount【数据请求、订阅、操作dom】
  * - 更新阶段：getDerivedStateFromProps 【派生state】 -> shouldComponentUpdate【优化：确定组件是否更新】-> render -> getSnapshotBeforeUpdate【获取更新前的快照信息】 -> componentDidUpdate 【数据请求、订阅、操作dom】
  * 
