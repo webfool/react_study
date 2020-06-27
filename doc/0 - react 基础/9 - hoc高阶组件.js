@@ -101,6 +101,6 @@ ReactDom.render(<LastName />, document.getElementById('root'))
 /**
  * 总结: 
  * 高阶组件（hoc) 指传入一个组件，再返回一个组件。通常是在传入组件的渲染前后做一些装饰处理。
- * hoc多层嵌套将会使代码变得复杂
+ * hoc多层嵌套将会使代码变得复杂。
  */
 
