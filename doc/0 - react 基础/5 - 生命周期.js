@@ -152,5 +152,9 @@ ReactDom.render(<Counter></Counter>, document.getElementById('root'))
  * - 带key重新渲染
  * - getDerivedStateFromProps 派生
  * - 子组件通过 ref 暴露重置 state 的方法
+ * 
+ * 4、当 props 变化时，有2种策略去监听变化
+ * - 需同步更新 state 时，在 getDerivedStateFromProps 中处理
+ * - 触发其它实例方法时，在 componentDidUpdate 中处理，此时 props 的变化不应该造成 render 渲染不一致
  */
 
