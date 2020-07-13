@@ -123,7 +123,12 @@ ReactDom.render(<Counter></Counter>, document.getElementById('root'))
 /**
  * 总结:
  * 当 props 或者 state 浅比较没变化时，不会重新 render
- * - 【React.PureComponent】 实现思路：生成一个继承了 React.Component 且含有 shouldComponent 的类，在 shouldComponent 中通过浅比较 props 和 state 决定是否渲染
- * - 【React.memo】实现思路：在函数组件外层包一层 类组件，由类组件的 shouldComponent 控制
+ * 【React.PureComponent】
+ * - 类组件的新旧 state、props 浅比较发生改变时，才重新执行 render
+ * - 实现思路：生成一个继承了 React.Component 且含有 shouldComponent 的类，在 shouldComponent 中通过浅比较 props 和 state 决定是否渲染
+ * 
+ * 【React.memo】
+ * - 函数组件新旧 props 浅比较发生改变时，才重新执行 render
+ * - 实现思路：在函数组件外层包一层 类组件，由类组件的 shouldComponent 控制
  */
 
