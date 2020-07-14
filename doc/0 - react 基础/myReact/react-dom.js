@@ -1,3 +1,8 @@
+
+/**
+ * 将 element 渲染到 parentNode 下。
+ * element 的 type 属性支持：html 标签字符串、class 组件、函数组件
+ */
 function render (element, parentNode) {
   // 如果直接传入一个字符串，直接当文本节点使用
   if (typeof element === 'string' || typeof element === 'number') {
@@ -33,10 +38,10 @@ function render (element, parentNode) {
     }
 
     return parentNode.appendChild(domEle)
-  } else if (type.isReactComponent) {
+  } else if (type.isReactComponent) { // 类组件
     const vnode = new type(props).render()
     return render(vnode, parentNode)
-  } else if (typeof type === 'function') {
+  } else if (typeof type === 'function') { // 函数组件
     return render(type(props), parentNode)
   }
 }

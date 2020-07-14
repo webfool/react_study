@@ -1,44 +1,61 @@
-import React, {useState, useEffect, useRef} from 'react'
+// import React, {useState, useCallback, useMemo, useReducer} from 'react'
+import React, {} from 'react'
 // import React from 'react'
 import ReactDOM from 'react-dom'
 
+/**
+ * useReducer：用于状态管理，包含3个要素：
+ * - 状态
+ * - reducer: 接受旧状态和 action，返回新状态
+ * - dispatch：接收 action，并传给当前传入函数的 reducer
+ */
 
 /**
- * 自定义 hook：
- * - 名称以 use 开头
- * - 重用的是状态逻辑，所以每次使用，其状态和副作用是完全隔离的
+ * 手写 useReducer：
+ * - 每次调用都能返回最新的状态值；且返回的 dispatch 依赖最新的 reducer 
  */
-function useLogger() {
-  const [value, setValue] = useState(0)
 
-  function setWithLogger(newVal) {
-    console.log('logger new value ->', newVal)
-    console.log('logger old value ->', value)
-    setValue(newVal)
+let memoizedState
+function useReducer(reducer, initialArg, init) {
+
+  function dispatch(action) {
+    memoizedState = reducer(memoizedState, action)
+    render()
   }
 
-  return [value, setWithLogger]
+  memoizedState = memoizedState || (typeof init === 'function' ? init(initialArg) : initialArg)
+  return [memoizedState, dispatch]
 }
 
-function Child1 () {
-  const [value, setValue] = useLogger()
-  return <>
-    <button onClick={() => setValue(value + 1)}>{value}</button>
-  </>
+
+function reducer(state, action) {
+  switch(action.type) {
+    case 'add':
+      return {number: state.number + 1}
+    case 'dec':
+      return {number: state.number - 1}
+    default:
+      return state
+  }
 }
 
-function Child2 () {
-  const [value, setValue] = useLogger()
+function Counter () {
+  const initialState = 1
+  function init(state) {
+    return {number: state}
+  }
+
+  const [state, dispatch] = useReducer(reducer, initialState, init)
+  console.log('state ->', state)
+
   return <>
-    <button onClick={() => setValue(value + 1)}>{value}</button>
+    <button onClick={() => dispatch({type: 'add'})}>{state.number}</button>
+    <button onClick={() => dispatch({type: 'dec'})}>{state.number}</button>
   </>
 }
 
 function render() {
-  ReactDOM.render(<>
-    <Child1 />
-    <Child2 />
-  </>, document.getElementById('root'))
+  ReactDOM.render(<Counter/>, document.getElementById('root'))
 }
 
 render()

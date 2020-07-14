@@ -45,7 +45,7 @@ ReactDom.render(<Counter step={2}></Counter>, document.getElementById('root'))
  * 总结:
  * 
  * 【函数this绑定的方式有4种】：推荐使用前2种，因为后2种每次 render 都会生成新的函数
- * 1、类定义方法时，通过 = 号赋值箭头函数
+ * 1、类定义方法时，通过 = 号赋值箭头函数（最推荐）
  * 2、在 constructor 内通过 this.add = this.add.bind(this)
  * 3、render 中添加回调时：onClick={this.add.bind(this)}
  * 4、render 中添加回调时：onClick={() => this.add()}

@@ -6,3 +6,8 @@
 - useMemo、useCallback 用于在函数组件频繁渲染时缓存值（性能优化）
 
 hook 只能在函数最外层调用，不能在循环、if...else、子函数中调用
+
+Q：
+- 每个函数有一个 memoizedState 还是全局有一个？
+- 组件销毁怎么管理 memoizedState
+- 如何重新触发渲染

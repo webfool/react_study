@@ -15,7 +15,11 @@ import ReactDOM from 'react-dom'
  * 底层通过 useReducer 实现：useState(state) 相当于 useReducer((oldState, newState) => newState, state)
  */
 
- // 手写 useState 功能
+/**
+ * 手写 useState 功能:
+ * - 多次调用能取到最新的值
+ * - 修改值且与之前的值不相同时，能触发重新渲染
+ */
 // let memoizedState
 // function useState(initialState) {
 //   memoizedState = memoizedState || initialState

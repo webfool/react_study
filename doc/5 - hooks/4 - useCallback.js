@@ -1,4 +1,5 @@
 import React, {useState, useCallback} from 'react'
+// import React, {useState} from 'react'
 // import React from 'react'
 import ReactDOM from 'react-dom'
 
@@ -9,13 +10,29 @@ import ReactDOM from 'react-dom'
  * 
  * useCallback(fn, deps) 相当于 useMemo(() => fn, deps)
  */
+
+/**
+  * 手写 useCallback 功能：
+  * - 依赖不变时，每次获取都是缓存的 cb；依赖变化时，缓存新 cb
+  */
+// let memoizedState
+// let memoizedDeps
+// function useCallback (cb, deps) {
+//   if (!memoizedDeps || !deps.every((v, i) => v === memoizedDeps[i])) {
+//     memoizedState = cb
+//     memoizedDeps = deps
+//   }
+//   return memoizedState
+// }
+
 let beforeCb
 function Counter () {
-  const cb = useCallback(() => console.log('cb'), [Math.random()])
+  const [time, setTime] = useState(1)
+
+  const cb = useCallback(() => console.log('cb'), [time])
   console.log('equal =>', cb === beforeCb)
   beforeCb = cb
 
-  const [time, setTime] = useState(1)
   return <>
     <button onClick={() => setTime(time + 1)}>{time}</button>
   </>
