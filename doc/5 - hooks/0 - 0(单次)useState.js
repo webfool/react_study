@@ -16,7 +16,7 @@ import ReactDOM from 'react-dom'
  */
 
 /**
- * 手写 useState 功能:
+ * 手写 useState 功能（函数内只调用一次 useState）:
  * - 多次调用能取到最新的值
  * - 修改值且与之前的值不相同时，能触发重新渲染
  */
