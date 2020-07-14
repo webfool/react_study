@@ -1,42 +1,37 @@
-import React, {} from 'react'
+import React, {useState, useContext} from 'react'
+// import React, {useState} from 'react'
 // import React from 'react'
 import ReactDOM from 'react-dom'
 
 /**
- * 手写 useState 功能(函数内多次调用 useState):
- * - 多个 useState 调用能取到其对应的值
- * - 修改值能触发重新渲染
+ * useContext：读取和订阅 context 的变化。
+ * 等同于：static contextType = MyContext 或者 <MyContext.Consumer>
  */
-let memoizedStates = []
-let index = 0
-function useState(value) {
-  memoizedStates[index] = memoizedStates[index] || value
 
-  const currentIndex = index
-  function setState(val) {
-    memoizedStates[currentIndex] = val
-    render()
-  }
+/**
+ * 手写实现 useContext：
+ * - 直接返回 context._currentValue 值即可
+ */
+// function useContext(context) {
+//   return context._currentValue
+// }
 
-  return [memoizedStates[index++], setState]
+const MyContext = React.createContext()
+function Parent () {
+  const [state, setState] = useState(1)
+  return <MyContext.Provider value={state}>
+      <Child></Child>
+      <button onClick={() => setState(state + 1)}>+</button>
+  </MyContext.Provider>
 }
 
-function Counter () {
-  const [time, setTime] = useState(1)
-  const [name, setName] = useState('hw')
-
-  return <>
-    {/* 通过值直接初始化/修改状态 */}
-    <button onClick={() => setTime(time + 1)}>counter {time}</button>
-
-    {/* 新旧状态相同时，不触发更新 */}
-    <button onClick={() => setName(`hw-${Math.ceil(Math.random() * 100)}`)}>{name}</button>
-  </>
+function Child () {
+  const value = useContext(MyContext)
+  return <div>{value}</div>
 }
 
 function render() {
-  index = 0 // 此处需要重置 index
-  ReactDOM.render(<Counter/>, document.getElementById('root'))
+  ReactDOM.render(<Parent/>, document.getElementById('root'))
 }
 
 render()

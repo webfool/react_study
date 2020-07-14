@@ -1,4 +1,5 @@
-import React, {useState, useCallback, useMemo, useContext} from 'react'
+import React, {useState, useContext} from 'react'
+// import React, {useState} from 'react'
 // import React from 'react'
 import ReactDOM from 'react-dom'
 
@@ -6,6 +7,14 @@ import ReactDOM from 'react-dom'
  * useContext：读取和订阅 context 的变化。
  * 等同于：static contextType = MyContext 或者 <MyContext.Consumer>
  */
+
+/**
+ * 手写实现 useContext：
+ * - 直接返回 context._currentValue 值即可
+ */
+// function useContext(context) {
+//   return context._currentValue
+// }
 
 const MyContext = React.createContext()
 function Parent () {
