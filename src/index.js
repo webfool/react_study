@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 
 import { createStore, bindActionCreators } from 'redux'
 import thunk from 'redux-thunk'
+import promiseMiddleware from 'redux-promise'
 
 // 返回一个组合函数，它内部从 fns 最后一个往前执行至第一个
 function compose(...fns) {
@@ -38,11 +39,13 @@ function reducer(state, action) {
 
 const logger1 = store => dispatch => action => {
   console.log('before1 ->', store.getState())
-  dispatch(action)
+  const result = dispatch(action)
   console.log('after1 ->', store.getState())
+
+  return result
 }
 
-const store = applyMiddleware(thunk, logger1)(createStore)(reducer, 0)
+const store = applyMiddleware(thunk, promiseMiddleware, logger1)(createStore)(reducer, 0)
 
 
 const actions = bindActionCreators({
@@ -60,7 +63,18 @@ const actions = bindActionCreators({
         })
       }, 1000)
     }
+  },
+  promiseAdd() {
+    return {
+      type: 'add',
+      payload: new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve(1)
+        }, 1000)
+      })
+    }
   }
+
 }, store.dispatch)
 
 class Counter extends Component {
@@ -85,6 +99,7 @@ class Counter extends Component {
       <button onClick={actions.add}>+</button>
       <button onClick={actions.del}>-</button>
       <button onClick={actions.asyncAdd}>异步+</button>
+      <button onClick={actions.promiseAdd}>promise +</button>
     </>
   }
 

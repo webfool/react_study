@@ -1,5 +1,5 @@
 
-// 实现 redux-thunk
+// 实现 redux-thunk：该中间件处理 action 为 function 的情况
 function createThunkMiddleware(extraArgument) {
   return ({getState, dispatch}) => next => action => {
     if (typeof action === 'function') {
