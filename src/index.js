@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
 
-import { createStore } from 'redux'
+import { createStore, bindActionCreators } from 'redux'
+import thunk from 'redux-thunk'
 
 // 返回一个组合函数，它内部从 fns 最后一个往前执行至第一个
 function compose(...fns) {
@@ -28,26 +29,39 @@ function applyMiddleware (...middlewares) {
   }
 }
 
+
 function reducer(state, action) {
   if (action.type === 'add') return state + 1
   if (action.type === 'del') return state - 1
   return state
 }
 
-// const store = createStore(reducer, 0)
 const logger1 = store => dispatch => action => {
   console.log('before1 ->', store.getState())
   dispatch(action)
   console.log('after1 ->', store.getState())
 }
 
-const logger2 = store => dispatch => action => {
-  console.log('before2 ->', store.getState())
-  dispatch(action)
-  console.log('after2 ->', store.getState())
-}
-const store = applyMiddleware(logger1, logger2)(createStore)(reducer, 0)
+const store = applyMiddleware(thunk, logger1)(createStore)(reducer, 0)
 
+
+const actions = bindActionCreators({
+  add() {
+    return {type: 'add'}
+  },
+  del() {
+    return {type: 'del'}
+  },
+  asyncAdd() {
+    return (dispatch) => {
+      setTimeout(() => {
+        dispatch({
+          type: 'add'
+        })
+      }, 1000)
+    }
+  }
+}, store.dispatch)
 
 class Counter extends Component {
   constructor(props) {
@@ -65,23 +79,12 @@ class Counter extends Component {
     })
   }
 
-  add = () => {
-    store.dispatch({
-      type: 'add'
-    })
-  }
-
-  del = () => {
-    store.dispatch({
-      type: 'del'
-    })
-  }
-
   render() {
     return <>
       <div>{this.state.num}</div>
-      <button onClick={this.add}>+</button>
-      <button onClick={this.del}>-</button>
+      <button onClick={actions.add}>+</button>
+      <button onClick={actions.del}>-</button>
+      <button onClick={actions.asyncAdd}>异步+</button>
     </>
   }
 
