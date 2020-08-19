@@ -1,3 +1,10 @@
+react-redux 的作用：
+- 传递给组件所需要的 store 中的数据
+- 传递给组件 dispatch action 的方法
+- 监听 store 变化并触发组件更新
+
+对于 store 的初始化等依旧是由 redux 负责
+
 ### mapStateToProps
 > 修改 store 时，通过 mapStateToProps 添加 store 属性到组件
 

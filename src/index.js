@@ -1,84 +1,92 @@
-// import React, {useState, useEffect, useRef} from 'react'
-import React, {useState, useRef} from 'react'
+import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
 
-/**
- * useEffect
- * - 第一次渲染一定会执行回调，后续渲染可以通过依赖项控制回调是否执行，如果为空数组，则只会在第一次渲染的时候调用
- * - 回调中可以返回清除副作用的函数，它将会在下次重新执行回调或卸载组件之前被调用
- * - 回调的执行时机是在组件渲染到屏幕之后
- */
+import { createStore } from 'redux'
 
-/**
- * 手写实现 useEffect:
- * - 调用时，如果依赖变化，则在渲染完之后重新执行回调
- * - 重新执行回调之前需要清除之前缓存的副作用
- */
-let memoizedStates = []
-let index = 0
+// 返回一个组合函数，它内部从 fns 最后一个往前执行至第一个
+function compose(...fns) {
+  return fns.reduce((a, b) => (...args) => a(b(...args)))
+}
 
-function useEffect(fn, deps) {
-  const current = memoizedStates[index]
-  if (!current || !current.deps || !deps || !deps.every((v, i) => v === current.deps[i])) {
-    const currentIndex = index
-    setTimeout(() => {
-      current && current.unEffect && current.unEffect()
-      const unEffect = fn()
-      memoizedStates[currentIndex] = {deps, unEffect}
+// applyMiddleware 的作用：传入一堆中间件用于装饰 dispatch 方法
+function applyMiddleware (...middlewares) {
+  return createStore => (...args) => {
+    const store = createStore(...args)
+
+    let dispatch
+    const middlewareAPI = {
+      getState: store.getState,
+      dispatch: (...args) => dispatch(...args)
+    }
+    middlewares = middlewares.map(middleware => middleware(middlewareAPI))
+    dispatch = compose(...middlewares)(store.dispatch)
+
+    return {
+      ...store,
+      dispatch
+    }
+  }
+}
+
+function reducer(state, action) {
+  if (action.type === 'add') return state + 1
+  if (action.type === 'del') return state - 1
+  return state
+}
+
+// const store = createStore(reducer, 0)
+const logger1 = store => dispatch => action => {
+  console.log('before1 ->', store.getState())
+  dispatch(action)
+  console.log('after1 ->', store.getState())
+}
+
+const logger2 = store => dispatch => action => {
+  console.log('before2 ->', store.getState())
+  dispatch(action)
+  console.log('after2 ->', store.getState())
+}
+const store = applyMiddleware(logger1, logger2)(createStore)(reducer, 0)
+
+
+class Counter extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      num: store.getState()
+    }
+  }
+
+  componentDidMount() {
+    store.subscribe(() => {
+      this.setState({
+        num: store.getState()
+      })
     })
   }
-  index++
-}
 
-function Parent () {
-  const [visible, setVisible] = useState(true)
-
-  function hidden() {
-    setVisible(false)
-    const states = memoizedStates.slice(0)
-    index = 0
-    memoizedStates = []
-    states.forEach(item => item && item.unEffect && item.unEffect())
+  add = () => {
+    store.dispatch({
+      type: 'add'
+    })
   }
-  return <>
-    {visible && <Child />}
-    <button onClick={hidden}>隐藏</button>
-  </>
+
+  del = () => {
+    store.dispatch({
+      type: 'del'
+    })
+  }
+
+  render() {
+    return <>
+      <div>{this.state.num}</div>
+      <button onClick={this.add}>+</button>
+      <button onClick={this.del}>-</button>
+    </>
+  }
+
 }
 
-function Child () {
-  const [time, setTime] = useState(1)
+ReactDOM.render(<Counter/>, document.getElementById('root'))
 
-  // 此处模拟 componentDidMount
-  useEffect(() => {
-    console.log('componentDidMount')
-  }, [])
-
-  // 此处模拟 componentDidUpdate
-  const mounted = useRef()
-  useEffect(() => {
-    if (!mounted.current) {
-      mounted.current = true
-      return
-    } else {
-      console.log('componentDidUpdate')
-      return () => {console.log('cancel')}
-    }
-  })
-
-  // 此处模拟 componentWillUnmount
-  useEffect(() => {
-    return () => {
-      console.log('componentWillUnmount')
-    }
-  }, [])
-
-  return <button onClick={() => {index = 0; setTime(time + 1)}}>{time}</button>
-}
-
-function render() {
-  ReactDOM.render(<Parent/>, document.getElementById('root'))
-}
-
-render()
 
