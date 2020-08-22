@@ -48,6 +48,8 @@ ReactDOM.render(<Counter></Counter>, document.getElementById('root'))
  * - action 可以识别时，操作之后应返回新 state
  * - action 不被识别时，返回原 state
  * 
+ * 不管是单个或者通过 combineReducers 去组合，每个 reducer 都自己设置默认值：(state = DefaultValue, action) => {}
+ * 
  * 【subscribe】
  * - subscribe 用来订阅，它的返回值用来解除订阅
  * - dispatch 完成后会直接调用所有 listeners，调用之前会生成事件快照，每个 listener 中添加或删除 listener 不会影响本次 dispatch 的回调列表
@@ -57,5 +59,6 @@ ReactDOM.render(<Counter></Counter>, document.getElementById('root'))
  * === 工具方法 ===
  * 【bindActionCreators】：为 action creator 或由其组成的对象装饰成绑定了 dispatch 的函数
  * 【combineReducers】: 
- *  生成一个主 reducer，派发 action 时，将 action 以及所有模块对应的 state 传入模块对应的 reducer 中，每个 reducer 的返回值重新组成 state 树
+ *  - 生成一个主 reducer，派发 action 时，将 action 以及所有模块对应的 state 传入模块对应的 reducer 中，每个 reducer 的返回值重新组成 state 树
+ *  - 如果没有初始化 state，那么默认给 {}
  */
