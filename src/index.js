@@ -1,25 +1,40 @@
-import React, {Component} from 'react'
-import ReactDOM from 'react-dom'
-import {Provider, connect} from 'react-redux'
+import React from 'react'
+import ReactDom from 'react-dom'
 
-import store from './store'
-import counterActions from './store/actions/counter'
+const TextContext = React.createContext()
 
-const Counter = connect(({counter}) => ({counter}), counterActions)(
-  class extends Component {
-    render() {
-      return <>
-        <div>{this.props.counter}</div>
-        <button onClick={this.props.add}>+</button>
-        <button onClick={this.props.del}>-</button>
-        <button onClick={this.props.cancel}>cancel</button>
-      </>
-    }
+class GrandParent extends React.Component{
+  render() {
+    return <TextContext.Provider value={{name: '111'}}>
+      <Child1></Child1>
+      <Parent></Parent>
+    </TextContext.Provider>
   }
-)
+}
 
-ReactDOM.render(<Provider store={store}>
-  <Counter />
-</Provider>, document.getElementById('root'))
+function Child1() {
+  return <TextContext.Consumer>
+    {
+      ({name}) => {
+        return <div>in Child1 -> {name}</div>
+      }
+    }
+  </TextContext.Consumer>
+}
 
+function Parent() {
+  return <TextContext.Provider value={{name: '222'}}>
+    <Child2></Child2>
+  </TextContext.Provider>
+}
+
+function Child2() {
+  return <TextContext.Consumer>
+    {({name}) => {
+      return <div>in Child2 -> {name}</div>
+    }}
+  </TextContext.Consumer>
+}
+
+ReactDom.render(<GrandParent></GrandParent>, document.getElementById('root'))
 

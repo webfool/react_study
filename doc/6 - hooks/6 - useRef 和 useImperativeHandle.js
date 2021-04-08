@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom'
 
 /**
  * useRef:
- * - 生成一个 ref 对象
+ * - 传入初始化参数，生成一个 ref 对象，如 useRef(null)，也可以不传参
  * - 每次重新渲染时，useRef 都会生成同一个 ref
  * 
  * useImperativeHandle

@@ -82,12 +82,14 @@ class SubCounter2 extends React.Component {
     console.log('constructor')
   }
 
-  static getDerivedStateFromProps(props, {preProps}) {
-    // 传入的 props 和 state 是组件最新的状态
-    if (!preProps || preProps.name !== props.name) {
+  static getDerivedStateFromProps(nextProps, preState) {
+    // nextProps 是父级最新传下来的 props
+    // preState 是 setState 更新之后的 state
+    const {preProps} = preState
+    if (!preProps || preProps.name !== nextProps.name) {
       return {
-        preProps: props,
-        name: props.name
+        preProps: nextProps,
+        name: nextProps.name
       }
     }
 
@@ -142,16 +144,17 @@ ReactDom.render(<Counter></Counter>, document.getElementById('root'))
  * 新版生命周期顺序
  * - 创建阶段：constructor【初始化state和方法】 -> getDerivedStateFromProps【派生 state】 -> render -> componentDidMount【数据请求、订阅、操作dom】
  * - 更新阶段：getDerivedStateFromProps 【派生state】 -> shouldComponentUpdate【优化：确定组件是否更新】-> render -> getSnapshotBeforeUpdate【获取更新前的快照信息】 -> componentDidUpdate 【数据请求、订阅、操作dom】
+ * - 卸载阶段：componentWillUnmount【取消订阅等】
  * 
  * 2、传参：render 之后 this.props/this.state 都是最新的，所以传参进来的都是旧数据
  * - 旧版生命周期中，componentWillUpdate 在 render 之前触发，所以只有 componentDidUpdate 传入的参数是旧数据，其它都是新数据
  * - 新版生命周期中，getSnapshotBeforeUpdate 在 render 之后触发，所以 getSnapshotBeforeUpdate 和 componentDidUpdate 传入的参数是旧数据，其它是新数据
- * ,
+ *
  * 3、props 控制 state 的一些方案：
  * - 完全受控组件
- * - 带key重新渲染
  * - getDerivedStateFromProps 派生
  * - 子组件通过 ref 暴露重置 state 的方法
+ * - 带key重新渲染
  * 
  * 4、当 props 变化时，有2种策略去监听变化
  * - 需同步更新 state 时，在 getDerivedStateFromProps 中处理

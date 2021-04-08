@@ -4,9 +4,8 @@ import React, {useState, useCallback} from 'react'
 import ReactDOM from 'react-dom'
 
 /**
- * useCallback
- * 是什么：缓存回调函数
- * 为什么需要：每次重新渲染时会重新执行函数，生成的回调都是新的，但有时不需要每次都用新回调
+ * useCallback：缓存函数及其对应的依赖
+ * 因为每次重新渲染时会重新执行组件，生成新的回调函数，但有时并不需要每次都用新回调
  * 
  * useCallback(fn, deps) 相当于 useMemo(() => fn, deps)
  */
